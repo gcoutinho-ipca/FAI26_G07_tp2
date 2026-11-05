@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import sys
+from pathlib import Path
 
 def run_analysis(file_path):
     try:
@@ -28,4 +28,4 @@ def run_analysis(file_path):
         print(f"Erro: {e}")
 
 if __name__ == "__main__":
-    run_analysis('data/archive/portugal_listinigs.csv')
+    run_analysis(str(Path(__file__).resolve().parent.parent / 'data' / 'archive' / 'portugal_listinigs.csv'))

@@ -1,6 +1,6 @@
-# Pendentes — Projeto 02 (FAI, G07)
+# Pendentes do Projeto 02 (FAI, G07)
 
-Ponto de situação a 04/11/2026. O detalhe e as fontes de cada ponto estão em [`inventario.md`](inventario.md): secção D (Q1–Q12) e secção E (orientações orais O1–O4, Q13–Q14).
+Ponto de situação a 04/11/2026. O detalhe e as fontes de cada ponto estão em [`inventario.md`](inventario.md): secção D (Q1-Q12) e secção E (orientações orais O1-O4, Q13-Q14).
 
 ## Guidelines mandatórias (orientação oral do docente, 04/11/2026)
 
@@ -23,8 +23,8 @@ Método de trabalho: **bloco a bloco**, perceber cada passo antes de avançar.
 - [ ] **Bloco 2: impureza (entropia/Gini) e ganho de informação, testados no exemplo «Restaurant»** ← em curso
 - [ ] Bloco 3: construção recursiva da árvore (ID3)
 - [ ] Escolher o dataset (Q7, Q14, Q15)
-- [ ] NB1 (fases CRISP-DM 1–6) com a árvore de decisão
-- [ ] NB2 (fases CRISP-DM 1–6) com o K-Means
+- [ ] NB1 (fases CRISP-DM 1-6) com a árvore de decisão
+- [ ] NB2 (fases CRISP-DM 1-6) com o K-Means
 - [ ] Execução completa dos dois notebooks (`nbconvert --execute`) e auto-verificação
 
 ## 1. Decisões a tomar (Gilberto + Rúbem)
@@ -40,7 +40,7 @@ Método de trabalho: **bloco a bloco**, perceber cada passo antes de avançar.
 | Q7 | **Datasets**: «Housing» / «Home credit» | Opção A: Home Credit no NB1, California Housing no NB2 | |
 | Q10 | **Divisão das tarefas** (uma tarefa principal por aluno) | NB1: ______ · NB2: ______ | |
 | Q11 | Versões das bibliotecas | Fixar as do `.venv` num `requirements.txt` (sem scikit-learn) | |
-| Q12 | Classes desequilibradas | FAI33 p.28–30: 30% para validação, 70% equilibrado 50/50, métrica principal F1 | |
+| Q12 | Classes desequilibradas | FAI33 p.28-30: 30% para validação, 70% equilibrado 50/50, métrica principal F1 | |
 | Q13 | **Só árvore de decisão, ou árvore + um 2.º algoritmo?** (guia R14 vs O2) | Confirmar com o docente | |
 | Q15 | Dataset pequeno o suficiente para Python puro (amostra + seleção de atributos se for o Home Credit) | Ver inventário E.3 | |
 | Q14 | Mesmo dataset nos dois notebooks? | Depende do Q7 | |
@@ -57,7 +57,7 @@ Método de trabalho: **bloco a bloco**, perceber cada passo antes de avançar.
 
 **NB1: preparação, EDA e árvore de decisão** (responsável: ______)
 - [ ] 1 Business Understanding: contexto e objetivos de negócio (R8, R13)
-- [ ] 2 Data Understanding: fonte, metadados e EDA (R10–R12)
+- [ ] 2 Data Understanding: fonte, metadados e EDA (R10-R12)
 - [ ] 3 Data Preparation: valores em falta, encoding, seleção de atributos, divisão, desequilíbrio (R15)
 - [ ] 4 Modeling: árvore de decisão e afinação dos hiperparâmetros (R16, R17)
 - [ ] 5 Evaluation: matriz de confusão, métricas, treino vs. teste (R18, R19)
