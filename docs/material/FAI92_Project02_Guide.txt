@@ -1,0 +1,89 @@
+FAI92_Project02_Guide
+====================
+
+--- Slide 1 ---
+Project Guide 02
+Fundamentals of Artificial Intelligence
+MSc in Applied Artificial Intelligence, 2026-27
+
+--- Slide 2 ---
+Introduction
+- This document presents the goal and the requirements for the development of project 02
+- The goal of the project is to implement distinct Machine Learning (ML) approaches and methods to address a specific problem
+- The project should use only one or two public datasets for classification, clustering and association rules
+- The project must be later presented and defended by the students
+
+--- Slide 3 ---
+Collaborative Platform
+For submitting the project, you have 2 options: Google Colab or GitHub
+
+If the workgroup decide to use Google Colab
+- One of the members of the group must create a folder in Google Drive using the nomenclature "FAI26_P02_G##", where G## corresponds to the group
+- The folder needs to be shared with the group members and the lecturer.
+
+If the workgroup decide to use GitHub platform
+- One of the members of the group must create a private repository
+- Use the nomenclature "FAI26_P02_G##", where G## corresponds to the group
+- Add the other members of the group as collaborators
+- The lecturer should also be added to the repository and the project
+
+--- Slide 4 ---
+Project submission
+- The code and the documentation must be merged into a Jupyter Notebook
+- A ZIP file of the all the project files must be submitted on Moodle before the deadline
+- The project must be later presented and defended by the students
+
+--- Slide 5 ---
+Notebook structure
+
+--- Slide 6 ---
+Introduction
+- Identify the work group: student name and number
+- Establish here the context and the purpose of project 02
+- Provide the individual contribution of each student
+- Each student should focus in one main task
+  - Supervised learning: apply two automatic classification methods
+  - Unsupervised learning: apply k-means algorithm
+- The structure of the notebook can be adapted according to each project characteristics
+
+--- Slide 7 ---
+Notebook structure (2)
+Dataset(s)
+- Provide the source of the used dataset(s)
+- Present an exploratory data analysis (EDA)
+- Include the dataset metadata
+- You can find many public datasets in https://www.kaggle.com/datasets
+- You should select data sets related with "Housing" and "Home credit".
+Source: https://headinghomeindiana.org/news/what-is-housing-first/
+
+--- Slide 8 ---
+Supervised learning
+- Automatic classification process
+  - Define the business goals to be achieved
+  - Select two algorithms, e.g., decision trees and random forests
+- For each classification method (2 sections)
+  - Explain how the data was prepared
+  - Apply the ML algorithm and evaluate the generate models
+  - Optimize the selected algorithm adjusting the hyperparameters
+  - Document the intermediate and final results
+- Results Analysis
+  - Present an analysis of the results based on performance metrics
+Source: https://www.elastic.co/guide/en/machine-learning/current/ml-dfa-classification.html
+
+--- Slide 9 ---
+Unsupervised learning
+- Dataset for unsupervised learning
+  - Provide the source of the used dataset(s)
+  - Present a brief description
+  - Include the dataset metadata
+- Clustering
+  - Define the business goal to be achieved
+  - Explain how the data was prepared
+  - Apply and evaluate the K-Means algorithm
+  - Optimize the algorithm hyperparameters
+  - Analyze the characteristics of each cluster
+  - Document the intermediate and final results
+Source: https://www.researchgate.net/figure/Example-of-three-different-clustering-algorithms-performing-clustering-on-data-with-two_fig5_344352203
+
+--- Slide 10 ---
+Thank you!

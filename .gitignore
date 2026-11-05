@@ -1,0 +1,17 @@
+# Ambiente virtual
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Material das aulas (direitos de autor dos docentes)
+docs/material/*.pdf
+
+# Duplicado do CSV em data/archive/
+data/archive.zip
+
+# Sistema
+.DS_Store
+Thumbs.db
