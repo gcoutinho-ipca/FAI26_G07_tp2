@@ -64,7 +64,9 @@ Em ambos: parâmetros no topo e tabela de experiências (O3).
 | 2 | Saem os distritos com menos de 100 anúncios (`MIN_ANUNCIOS_DISTRITO = 100`); são 9 distritos | 122 097 | D06 |
 | 3 | Alvo `caro` = 1 se `Price` > mediana do distrito, senão 0 (os 665 anúncios com o preço igual à mediana ficam 0). Resultado: 50,4% barato / 49,6% caro. Depois disto, `Price` sai dos atributos | 122 097 | D03, D05 |
 | 4 | Ficam só os **8 atributos** escolhidos e o alvo: `Type`, `TotalArea`, `LivingArea`, `NumberOfBathrooms`, `Parking`, `ConstructionYear`, `EnergyCertificate`, `Elevator` | 122 097 | D07 |
-| ... | Por decidir: valores em falta (`ConstructionYear` 14,6%, `NumberOfBathrooms` 0,3%, `Elevator` 9 casos), discretização dos contínuos para o ID3, amostra e divisão treino/teste | | |
+| 5 | Saem as linhas com nulo em `NumberOfBathrooms` ou em `Elevator` | 121 679 | D09 |
+| ⏳ | **`ConstructionYear` (14,6% de nulos): para decidir com o Rúbem.** O nulo tem 71,8% caros, por isso não é aleatório. As opções e os dados estão na D08 | | D08 |
+| ... | Por decidir: erros e outliers (ex.: `NumberOfBathrooms` com o máximo de 3 020 e 84 casos com mais de 10), discretização dos contínuos para o ID3, amostra e divisão treino/teste | | |
 
 **Porque é que estes 8 e não outros (resumo da D07):** todos têm 15% de nulos ou menos e mostram relação com o alvo. As colunas com mais de 50% de nulos, as que têm centenas ou milhares de valores (`City`, `Town`), as redundantes e o próprio `Price` ficaram de fora. A lista completa dos excluídos, com o motivo de cada um, está na D07 de [`decisoes.md`](decisoes.md).
 
