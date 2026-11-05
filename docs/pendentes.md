@@ -1,6 +1,6 @@
 # Pendentes do Projeto 02 (FAI, G07)
 
-Ponto de situação a 04/11/2026. O detalhe e as fontes de cada ponto estão em [`inventario.md`](inventario.md): secção D (Q1-Q12) e secção E (orientações orais O1-O4, Q13-Q14).
+Ponto de situação a 04/11/2026. Registo de decisões: [`decisoes.md`](decisoes.md). O detalhe e as fontes de cada ponto estão em [`inventario.md`](inventario.md): secção D (Q1-Q12) e secção E (orientações orais O1-O4, Q13-Q14).
 
 ## Guidelines mandatórias (orientação oral do docente, 04/11/2026)
 
@@ -44,6 +44,7 @@ Método de trabalho: **bloco a bloco**, perceber cada passo antes de avançar.
 | Q13 | **Só árvore de decisão, ou árvore + um 2.º algoritmo?** (guia R14 vs O2) | Confirmar com o docente | |
 | Q15 | Dataset pequeno o suficiente para Python puro (amostra + seleção de atributos se for o Home Credit) | Ver inventário E.3 | |
 | Q14 | Mesmo dataset nos dois notebooks? | Depende do Q7 | |
+| Q16 | Alvo do ID3 no NB1 | `Type` (rascunho inicial) tem 21 classes desequilibradas e um objetivo de negócio fraco | **Preço caro/barato**: acima ou abaixo da mediana **por distrito**, só Apartment + House. `Price` fica fora dos atributos ✔ (D03-D05 em `decisoes.md`) |
 
 ## 2. Tarefas administrativas
 

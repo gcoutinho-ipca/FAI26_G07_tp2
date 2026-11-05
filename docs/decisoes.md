@@ -1,0 +1,21 @@
+# Registo de decisões do Projeto 02 (FAI, G07)
+
+Todas as decisões tomadas no projeto ficam aqui, por ordem, com a data, as alternativas consideradas e a justificação.
+As referências seguem a notação do `inventario.md` (ex.: `FAI32 p.15`; `ORAL` = orientação oral do docente).
+Horas em Europe/Lisbon.
+
+| ID | Data | Tema | Decisão | Alternativas consideradas | Justificação |
+|---|---|---|---|---|---|
+| D01 | 2026-11-05 09:45 | Estrutura dos notebooks | NB1 = preparação + EDA + árvore de decisão (ID3); NB2 = K-Means. O `project_status.md` foi corrigido em conformidade | Plano do rascunho inicial (NB1 = limpeza; NB2 = árvore e K-Means juntos) | Orientação oral O2, que prevalece sobre o guia e sobre o plano anterior |
+| D02 | 2026-11-05 09:45 | Script de rascunho | `notebook_1_data_treatment.py` fica como rascunho de referência e não é usado tal como está. A preparação é revista por partes | Usar o script tal como está | Problemas de método: `fillna(0)` cria zeros falsos; o Min-Max sem tratar outliers comprime o `Price` para perto de 0; os contínuos não são discretizados para o ID3 (FAI32 p.15) |
+| D03 | 2026-11-05 09:45 | Alvo do ID3 | Classe binária **caro/barato**: preço acima ou abaixo da mediana. `Price` sai da lista de atributos | `Type` com 21 classes (rascunho inicial); Apartment vs House | `Type` tem 21 classes muito desequilibradas e um objetivo de negócio fraco. O binário dá um objetivo claro e classes ~50/50. Retirar o `Price` evita a fuga de informação (falsos preditores, FAI33 p.26) |
+| D04 | 2026-11-05 09:47 | Universo do NB1 | Só os imóveis **Apartment** e **House** com `Price` preenchido: 122 271 linhas | Todos os residenciais (~124 mil); só Apartment (~70,7 mil) | Dois tipos homogéneos e comparáveis. Simplicidade (O1). As linhas com o preço em falta não têm alvo e por isso saem |
+| D05 | 2026-11-05 09:47 | Limiar caro/barato | **Mediana do `Price` por distrito** («caro para a zona») | Mediana nacional | Objetivo de negócio mais fino. Consequência: dentro de cada distrito o alvo fica ~50/50 por construção, por isso o `District` deixa de ser um bom preditor. **Risco em aberto:** 9 distritos têm menos de 50 anúncios (ex.: Ilha do Pico 1, Ilha das Flores 1, Ilha do Faial 3) e há um «Z - Fora de Portugal» com 43. Ver D06 |
+| D06 | 2026-11-05 09:55 | Distritos com poucos anúncios | **Excluir os distritos com menos de 100 anúncios** (Apartment + House com preço). Saem 9 distritos e 174 linhas (0,14%), e ficam **122 097**. O limiar `MIN_ANUNCIOS_DISTRITO = 100` é um parâmetro configurável (O3) | Agrupar as ilhas em regiões (Açores 235, Madeira 17); usar a mediana nacional como fallback | Uma mediana calculada com 1 a 43 anúncios é instável. A perda é desprezível e o alvo mantém uma só definição. Excluídos: Ilha do Pico (1), Ilha das Flores (1), Ilha do Faial (3), Ilha da Madeira (8), Ilha de Porto Santo (9), Ilha Terceira (35), Viseu (35), Ilha de São Miguel (39), Z - Fora de Portugal (43) |
+
+| D07 | 2026-11-05 10:05 | Atributos do ID3 | **Base de 8:** `Type`, `TotalArea`, `LivingArea`, `NumberOfBathrooms`, `Parking`, `ConstructionYear`, `EnergyCertificate`, `Elevator`. Ficam numa lista configurável no topo do NB1 (O3) | Base + `Garage` e `ElectricCarsCharging` (nulo como «Desconhecido»); base + `City` (255 valores) | Têm todos 15% de nulos ou menos e uma relação visível com o alvo (área mediana de 91 m² nos baratos contra 155 m² nos caros; certificado A com 79% caros; elevador com 56% contra 46%). São poucos atributos, o que torna a árvore viável em Python puro (Q15) e simples (O1). **Excluídos:** `Price` (fuga, D03); `District` (ganho ~0 por construção, D05); `Floor`, `ConservationStatus`, `LotSize`, `NumberOfWC`, `BuiltArea` e `PublishDate` (mais de 50% de nulos); `Town` e `City` (muitos valores: o ganho de informação favorece-os e leva ao overfitting `[CG]`); `EnergyEfficiencyLevel` (repete o `EnergyCertificate`); `TotalRooms` (35% de nulos, redundante com os quartos); `NumberOfBedrooms`, `Garage` e `ElectricCarsCharging` (34,5% de nulos, que não são aleatórios) |
+
+## Regras transversais
+
+- **Código comentado e explicativo:** todo o código do projeto é comentado de forma a explicar a lógica, e não só o que cada linha faz (ORAL O5, reforçado pelo Gilberto a 2026-11-05).
+- **Cada decisão nova** entra nesta tabela antes de ser implementada.
