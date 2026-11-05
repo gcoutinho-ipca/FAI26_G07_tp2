@@ -1,7 +1,7 @@
 # Status do Projeto - FAI, G07 (Projeto 02)
 
 **Data de última atualização:** 05 de Novembro de 2026
-Estado: Data Understanding inicial concluída. Revisão da preparação dos dados em curso.
+Estado: preparação dos dados do NB1 em curso (passos 1 a 5 decididos; D08 pendente). O ponto de situação e o plano por blocos estão em [`pendentes.md`](pendentes.md).
 **Dataset Utilizado:** `data/archive/portugal_listinigs.csv`
 
 ## 1. Objetivo do Projeto
