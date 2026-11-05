@@ -33,10 +33,14 @@ Foram identificadas lacunas críticas que exigem tratamento na fase de **Data Pr
 
 ## 3. Pipeline de Trabalho (alinhado com a orientação oral O2)
 
-São dois notebooks e cada um corre sozinho, do início ao fim, seguindo as 6 fases do CRISP-DM (O4). Os detalhes estão em `inventario.md`, secção E.
+São dois notebooks principais, que seguem as 6 fases do CRISP-DM (O4), e um notebook de apoio com a EDA (D11). Cada notebook corre sozinho do início ao fim. Os detalhes estão em `inventario.md`, secção E.
+
+### **NB0: EDA (apoio)**
+- EDA completa do dataset (FAI33 p.4-12): visão geral, metadados, análise univariada, bivariada com o alvo e multivariada, valores em falta e outliers.
+- Serve para interpretar os dados com calma. As conclusões passam em resumo para a fase *Data Understanding* do NB1.
 
 ### **NB1: Preparação, EDA e Árvore de Decisão (ID3)**
-- **Fases CRISP-DM:** 1 a 6.
+- **Fases CRISP-DM:** 1 a 6. A *Data Understanding* é um resumo da EDA do NB0.
 - **Data Preparation:** valores em falta, discretização dos atributos contínuos (o ID3 exige atributos discretos, FAI32 p.15), seleção de atributos (evitar *falsos preditores*), amostra e divisão estratificada (Q15, Q12).
 - **Modeling:** ID3 implementado à mão, com critério entropia/Gini e profundidade configuráveis, testado primeiro no exemplo «Restaurant» (FAI32 p.17-18).
 - **Evaluation:** matriz de confusão, accuracy, precision, recall, F1, treino vs. teste (FAI34).

@@ -7,6 +7,8 @@ Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que j
 | Ficheiro | Para que serve |
 |---|---|
 | `pendentes.md` (este) | Onde estamos e qual é o próximo bloco |
+| `notebooks/NB0_EDA.ipynb` | EDA completa do dataset (por criar, blocos E) |
+| `notebooks/NB1_arvore_decisao.ipynb` | Preparação + resumo da EDA + árvore de decisão (em construção) |
 | [`decisoes.md`](decisoes.md) | Registo de **todas** as decisões (D01, D02…), com as alternativas e a justificação |
 | [`project_status.md`](project_status.md) | Visão geral do projeto e, na **secção 3A**, os passos do tratamento de dados do NB1 por ordem |
 | [`inventario.md`](inventario.md) | Requisitos do guia (R1-R27), conteúdo dos slides (FAI31-34) e orientações orais (O1-O5) |
@@ -39,8 +41,11 @@ Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que j
 | 05/11 | **Universo:** só Apartment + House com preço, sem os distritos com menos de 100 anúncios | D04, D06 |
 | 05/11 | **8 atributos:** `Type`, `TotalArea`, `LivingArea`, `NumberOfBathrooms`, `Parking`, `ConstructionYear`, `EnergyCertificate`, `Elevator` | D07 |
 | 05/11 | Removidas as linhas com nulo em `NumberOfBathrooms` ou `Elevator`: ficam **121 679 linhas**, com o alvo **49,6% caro** | D09 |
+| 05/11 | Criado o `notebooks/NB1_arvore_decisao.ipynb`, onde o código do algoritmo é escrito diretamente | D10 |
+| 05/11 | **Bloco A1 (entropia)** feito e validado no «Restaurant» (6/6 testes OK) | NB1, secção 4.2 |
+| 05/11 | A EDA completa fica num notebook próprio (NB0) e o NB1 fica só com um resumo | D11 |
 
-**Ainda não há código do modelo.** Até aqui só se tomaram decisões, confirmadas com contas sobre os dados reais.
+**Código feito até agora:** só o bloco A1 (entropia). O resto foram decisões, confirmadas com contas sobre os dados reais.
 
 ---
 
@@ -99,7 +104,7 @@ Cada bloco é pequeno: um objetivo, um resultado que se possa verificar e uma de
 
 | Bloco | Objetivo | Teste | Estado |
 |---|---|---|---|
-| A1 | Função de **entropia** `E = −Σ p_i log2(p_i)` (FAI32 p.16) | Exemplo «Restaurant» com as contas feitas à mão | ☐ |
+| A1 | Função de **entropia** `E = −Σ p_i log2(p_i)` (FAI32 p.16) | Exemplo «Restaurant» com as contas feitas à mão: 6/6 testes OK | ✔ validado 05/11 |
 | A2 | Função do **índice de Gini** (alternativa à entropia) | Restaurant | ☐ |
 | A3 | **Ganho de informação** de um atributo | Restaurant: *Patrons* tem o maior ganho (FAI32 p.17-18) | ☐ |
 | A4 | Escolher o melhor atributo num nó | Restaurant: raiz = *Patrons* | ☐ |
@@ -109,12 +114,23 @@ Cada bloco é pequeno: um objetivo, um resultado que se possa verificar e uma de
 | A8 | 10-fold CV estratificada à mão (FAI33 p.33-34) | Confirmar que cada fold mantém a proporção das classes | ☐ |
 | A9 | Afinação dos hiperparâmetros (Q3) e decisão do Q13 | Tabela de experiências (O3) | ☐ |
 
+### E: NB0, EDA (FAI33 p.4-12)
+
+| Bloco | Objetivo | Estado |
+|---|---|---|
+| E1 | Esqueleto do NB0, carregamento dos dados e visão geral: `head`, `info`, `describe` e valores únicos (FAI33 p.9) | ☐ |
+| E2 | Metadados: tipo e papel de cada atributo (FAI33 p.12; R12) | ☐ |
+| E3 | Univariada: estatísticas, histogramas e box plots dos atributos escolhidos (FAI33 p.5) | ☐ |
+| E4 | Bivariada com o alvo caro/barato: as justificações da D07 em gráfico (FAI33 p.5-6) | ☐ |
+| E5 | Valores em falta e outliers em gráfico, como apoio à D08 e à Q17 | ☐ |
+| E6 | Conclusões da EDA (o texto que passa como resumo para o NB1) | ☐ |
+
 ### N: Montagem do NB1
 
 | Bloco | Objetivo | Estado |
 |---|---|---|
 | N1 | Esqueleto do notebook: capa (R7, R9), configuração com os parâmetros no topo (O3), secções CRISP-DM 1-6 | ☐ |
-| N2 | Preencher as fases 1-3 com P1-P6 e a EDA (texto da secção 3A do `project_status.md`) | ☐ |
+| N2 | Preencher as fases 1-3: o resumo da EDA (vem do E6 e remete para o NB0) e a preparação P1-P6 (texto da secção 3A do `project_status.md`) | ☐ |
 | N3 | Fases 4-5: treinar no dataset real, avaliar, comparar treino vs. teste (FAI34 p.19-21) | ☐ |
 | N4 | Fase 6: conclusões e tabela das experiências | ☐ |
 
