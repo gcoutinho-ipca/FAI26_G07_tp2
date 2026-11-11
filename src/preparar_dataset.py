@@ -36,10 +36,20 @@ FICHEIRO_ANUNCIOS = RAIZ / "data" / "archive" / "portugal_listinigs.csv"
 PASTA_PORDATA = RAIZ / "data" / "pordata"
 FICHEIRO_SAIDA = RAIZ / "data" / "processed" / "dataset_final.csv"
 
-# D18: só apartamentos. ATENÇÃO: o resto do script assume este universo
-# (avaliação bancária dos apartamentos e um só conjunto de limiares no
-# alvo). Acrescentar «House» aqui exigia rever os passos 4 e 5.
-TIPOS_A_MANTER = ["Apartment"]
+# D21: apartamentos e moradias. Cada tipo é comparado com a avaliação
+# bancária do seu próprio tipo (AVAL_POR_TIPO) e tem os seus limiares no
+# alvo (D15). Um tipo novo aqui precisa de uma entrada em AVAL_POR_TIPO.
+TIPOS_A_MANTER = ["Apartment", "House"]
+
+# D22: tipologia mínima por tipo. Nos apartamentos o T0 é um estúdio; nas
+# moradias o «T0» é quase sempre uma ruína ou um campo por preencher
+# (93% sem certificado, €/m² mediano de 469 contra 2 138 nas restantes)
+TIPOLOGIA_MIN = {"Apartment": 0, "House": 1}
+
+# D23: anos de construção que são valores por omissão do portal e não o ano
+# real (nas moradias habitáveis, 1 767 em 1937 e 1 666 em 1951, contra cerca
+# de 50 nos anos vizinhos). As linhas com estes anos saem.
+ANOS_SUSPEITOS = [1937, 1951]
 
 # D20: regras de plausibilidade. Um valor fora destes limites é tratado
 # como erro de introdução no portal e a linha sai.
@@ -68,6 +78,7 @@ NOMES_CLASSES = ["barato", "medio", "medio-alto", "caro", "muito caro"]
 # A subcategoria é None quando o quadro só tem uma série.
 INDICADORES_PORDATA = {
     "aval_m2_apartamento": ("avaliação-bancária", "Apartamentos", "2025"),
+    "aval_m2_moradia":     ("avaliação-bancária", "Moradias", "2025"),
     "aval_m2_total":       ("avaliação-bancária", "Total", "2025"),
     "poder_compra":        ("Poder-de-compra", None, "2023"),
     "alojamentos_km2":     ("alojamentos-familiares-clássicos-por-km2", None, "2022"),
@@ -82,6 +93,9 @@ CORRESPONDENCIAS_CONCELHOS = {
     "praia da vitoria": "vila da praia da vitoria",
     "calheta de s. jorge": "calheta [r.a.a.]",
 }
+
+# D13 / D21: coluna do PORDATA com a avaliação bancária de cada tipo
+AVAL_POR_TIPO = {"Apartment": "aval_m2_apartamento", "House": "aval_m2_moradia"}
 
 
 # =============================================================================
@@ -157,9 +171,9 @@ passos = []
 df = pd.read_csv(FICHEIRO_ANUNCIOS, low_memory=False)
 registar(passos, "dataset original", df)
 
-# D18: só apartamentos, e só os que têm preço (sem preço não há alvo)
+# D21: apartamentos e moradias, e só os que têm preço (sem preço não há alvo)
 df = df[df["Type"].isin(TIPOS_A_MANTER) & df["Price"].notna()]
-registar(passos, "só apartamentos com preço (D18)", df)
+registar(passos, "apartamentos e moradias com preço (D21)", df)
 
 # D20 (2): duplicados exatos. Comparamos todas as colunas originais, antes
 # de escolher atributos, para só apagar anúncios repetidos de facto
@@ -173,7 +187,8 @@ registar(passos, "sem duplicados exatos (D20)", df)
 # O dataset junta dois portais. Num, a tipologia (T0, T1, ...) vem em
 # NumberOfBedrooms; no outro, esse campo está vazio e a tipologia vem em
 # TotalRooms. A EDA confirmou-o: a área mediana por valor é a mesma nos
-# dois (T2: 84 vs 85 m²; T3: 115 vs 117 m²). Juntamos os dois campos.
+# dois portais (apartamentos T2: 84 vs 85 m², T3: 115 vs 117 m²; moradias
+# T3: 150 vs 150 m², T4: 200 vs 200 m²). Juntamos os dois campos.
 df["Tipologia"] = df["NumberOfBedrooms"].fillna(df["TotalRooms"])
 
 
@@ -188,18 +203,25 @@ valido = (
     & df["LivingArea"].between(AREA_UTIL_MIN, AREA_UTIL_MAX)
     & df["NumberOfBathrooms"].between(WC_MIN, WC_MAX)
     # um apartamento com 2 quartos e 0 casas de banho não existe: o 0 é o
-    # valor que o portal grava quando o campo não foi preenchido
+    # valor que o portal grava quando o campo não foi preenchido. Nas
+    # moradias, o 0 e o certificado NC marcam sobretudo ruínas e casas para
+    # recuperar, que ficam fora do dataset (D22)
     & ~df["EnergyCertificate"].isin(CERTIFICADOS_SEM_CLASSE)
+    # D22: tipologia mínima do tipo (fora as moradias «T0»)
+    & (df["Tipologia"] >= df["Type"].map(TIPOLOGIA_MIN))
+    # D23: anos por omissão. isin() dá False num nulo, por isso os anos em
+    # falta ficam (são a categoria «Desconhecido» da D08)
+    & ~df["ConstructionYear"].isin(ANOS_SUSPEITOS)
 )
 df = df[valido]
-registar(passos, "regras de plausibilidade (D20)", df)
+registar(passos, "regras de plausibilidade (D20, D22, D23)", df)
 
 # D09 / D20 (3): nulos nos atributos que não podem ficar vazios
 df = df.dropna(subset=["Elevator", "Tipologia"])
 registar(passos, "sem nulos em Elevator e Tipologia (D09, D20)", df)
 
 # D20 (2b): repetidos entre portais. Os duplicados exatos já saíram, mas o
-# mesmo apartamento publicado nos dois portais difere só nos campos que um
+# mesmo imóvel publicado nos dois portais difere só nos campos que um
 # portal tem e o outro não (Garage, PublishDate, ...). Comparamos então só
 # as colunas que descrevem o imóvel. Na EDA, 99,7% destes grupos tinham a
 # mesma freguesia. Sem este passo, o mesmo imóvel podia cair no treino e no
@@ -224,27 +246,35 @@ if REMOVER_REPETIDOS_ENTRE_PORTAIS:
 # A chave é o concelho: City no portal, Município no PORDATA
 df["chave_concelho"] = df["City"].map(normalizar_nome).replace(CORRESPONDENCIAS_CONCELHOS)
 
+tem_valor_concelho = {}   # por coluna: o concelho tem valor próprio?
 for coluna, (parte_nome, subcategoria, ano) in INDICADORES_PORDATA.items():
     municipio, nuts3 = ler_indicador_pordata(parte_nome, subcategoria, ano)
     # Valor do município; se não existir, o da NUTS III a que pertence
     df[coluna] = df["chave_concelho"].map(municipio).fillna(df["chave_concelho"].map(nuts3))
-    # Para a avaliação dos apartamentos guardamos também de onde veio o
-    # valor, para se poder ver quantos anúncios dependem de um substituto
-    if coluna == "aval_m2_apartamento":
-        tem_valor_concelho = df["chave_concelho"].map(municipio).notna()
+    # Guardamos se o valor veio do próprio concelho, para se poder ver
+    # quantos anúncios dependem de um substituto
+    tem_valor_concelho[coluna] = df["chave_concelho"].map(municipio).notna()
 
-# D13: a referência é a avaliação dos apartamentos do concelho; se faltar,
-# a dos apartamentos da NUTS III (mesmo tipo de imóvel); só depois o total
-# (ex.: Vila Nova de Cerveira não tem valor de apartamentos e fica com o do
-# Alto Minho, 1 614 €/m², em vez do total do concelho, 1 285 €/m², que
-# mistura moradias)
-df["aval_m2"] = df["aval_m2_apartamento"].fillna(df["aval_m2_total"])
+# D13 / D21: cada anúncio é comparado com a avaliação do seu tipo no
+# concelho (apartamentos com «Apartamentos», moradias com «Moradias»); se
+# faltar, a do mesmo tipo na NUTS III; só depois o total, que mistura os
+# dois tipos (ex.: Vila Nova de Cerveira não tem valor de apartamentos e
+# fica com o do Alto Minho, 1 614 €/m², em vez do total do concelho,
+# 1 285 €/m²)
+aval_tipo = pd.Series(np.nan, index=df.index)
+tipo_no_concelho = pd.Series(False, index=df.index)
+for tipo, coluna in AVAL_POR_TIPO.items():
+    e_deste_tipo = df["Type"] == tipo
+    aval_tipo[e_deste_tipo] = df.loc[e_deste_tipo, coluna]
+    tipo_no_concelho[e_deste_tipo] = tem_valor_concelho[coluna][e_deste_tipo]
+
+df["aval_m2"] = aval_tipo.fillna(df["aval_m2_total"])
 df["aval_origem"] = np.select(
-    [tem_valor_concelho, df["aval_m2_apartamento"].notna(), df["aval_m2_total"].notna()],
+    [tipo_no_concelho, aval_tipo.notna(), df["aval_m2_total"].notna()],
     ["concelho", "nuts3", "total"],
     default="sem valor",
 )
-df = df.drop(columns=["aval_m2_apartamento", "aval_m2_total"])
+df = df.drop(columns=list(AVAL_POR_TIPO.values()) + ["aval_m2_total"])
 
 # D20 (4): anúncios sem avaliação são os de fora de Portugal (Brasil, Dubai)
 df = df.dropna(subset=["aval_m2"])
@@ -259,11 +289,20 @@ registar(passos, "com avaliação bancária do concelho (D12, D20)", df)
 # pede 50% acima do que os bancos avaliam naquele concelho.
 df["racio"] = (df["Price"] / df["LivingArea"]) / df["aval_m2"]
 
-# Os limiares são os percentis do rácio, calculados depois da limpeza
-limiares = df["racio"].quantile(PERCENTIS_CLASSES).values
-# np.digitize devolve 0 abaixo do 1.º limiar, 1 entre o 1.º e o 2.º, etc.
-# right=True: um valor igual ao limiar fica na classe de baixo
-df["classe_id"] = np.digitize(df["racio"], limiares, right=True)
+# Os limiares são os percentis do rácio, calculados depois da limpeza e
+# separadamente para cada tipo (D13, D15). Os anúncios pedem, em mediana,
+# mais acima da avaliação nos apartamentos do que nas moradias; com um
+# limiar único, o Type passava a prever o alvo só por causa da definição.
+# Linhas da tabela = tipos; colunas = percentis.
+limiares = df.groupby("Type")["racio"].quantile(PERCENTIS_CLASSES).unstack()
+
+df["classe_id"] = 0
+for tipo in limiares.index:
+    e_deste_tipo = df["Type"] == tipo
+    # np.digitize devolve 0 abaixo do 1.º limiar, 1 entre o 1.º e o 2.º, etc.
+    # right=True: um valor igual ao limiar fica na classe de baixo
+    df.loc[e_deste_tipo, "classe_id"] = np.digitize(
+        df.loc[e_deste_tipo, "racio"], limiares.loc[tipo].values, right=True)
 df["classe"] = df["classe_id"].map(dict(enumerate(NOMES_CLASSES)))
 
 # D16: o alarme forte é a classe «muito caro» (acima do P90). O alarme
@@ -278,7 +317,7 @@ colunas_finais = [
     # auxiliares (identificação e chave do cluster da D17; não são features)
     "District", "City",
     # features do anúncio
-    "Tipologia", "LivingArea", "NumberOfBathrooms", "Parking",
+    "Type", "Tipologia", "LivingArea", "NumberOfBathrooms", "Parking",
     "ConstructionYear", "EnergyCertificate", "Elevator",
     # features do concelho (PORDATA)
     "poder_compra", "alojamentos_km2", "individuos_alojamento",
@@ -304,15 +343,17 @@ final.to_csv(FICHEIRO_SAIDA, index=False, encoding="utf-8")
 # =============================================================================
 print(f"\nGravado: {FICHEIRO_SAIDA.relative_to(RAIZ)}  ({final.shape[0]} linhas x {final.shape[1]} colunas)")
 
-print("\nLimiares do rácio (D15):")
-for p, v in zip(PERCENTIS_CLASSES, limiares):
-    print(f"  P{int(p * 100):<3} {v:.3f}")
+print("\nLimiares do rácio por tipo (D15):")
+print(limiares.rename(columns=lambda p: f"P{int(p * 100)}").round(3).to_string())
 
-print("\nDistribuição do alvo:")
-print((final["classe"].value_counts(normalize=True).reindex(NOMES_CLASSES) * 100).round(1).to_string())
+print("\nDistribuição do alvo por tipo (%):")
+distribuicao = pd.crosstab(final["Type"], final["classe"], normalize="index") * 100
+print(distribuicao[NOMES_CLASSES].round(1).to_string())
+print("\nLinhas por tipo:")
+print(final["Type"].value_counts().to_string())
 
 print("\nOrigem da avaliação bancária (n.º de anúncios):")
-print(final["aval_origem"].value_counts().to_string())
+print(pd.crosstab(final["aval_origem"], final["Type"]).to_string())
 
 print("\nNulos por coluna (%):")
 nulos = (final.isna().mean() * 100).round(2)

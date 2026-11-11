@@ -1,7 +1,7 @@
 # Status do Projeto - FAI, G07 (Projeto 02)
 
 **Data de última atualização:** 11 de Novembro de 2026
-Estado: dataset final pronto a 11/11 (`data/processed/dataset_final.csv`, 46 450 apartamentos; ver [`dataset_final.md`](dataset_final.md)). A secção 3A abaixo é o histórico de 05/11: o universo, os atributos e o alvo foram revistos pelas D15, D18, D19 e D20. O ponto de situação e o plano por blocos estão em [`pendentes.md`](pendentes.md).
+Estado: dataset final pronto a 11/11 (`data/processed/dataset_final.csv`, 72 270 imóveis: 45 498 apartamentos e 26 772 moradias; ver [`dataset_final.md`](dataset_final.md)). A secção 3A abaixo é o histórico de 05/11: o universo, os atributos e o alvo foram revistos pelas D15 e D18 a D23. O ponto de situação e o plano por blocos estão em [`pendentes.md`](pendentes.md).
 **Datasets utilizados:** `data/archive/portugal_listinigs.csv` (anúncios) e `data/pordata/` (indicadores do INE por concelho, extraídos a 04-11-2026; D12)
 
 ## 1. Objetivo do Projeto
