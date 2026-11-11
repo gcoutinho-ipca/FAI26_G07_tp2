@@ -50,6 +50,7 @@ Ponto de situação a **11/11/2026**. Este é o ficheiro de entrada: diz o que j
 | 11/11 | **Alvo em 5 classes** (barato, médio, médio-alto, caro, muito caro; 25/25/25/15/10, percentis por tipo) | D15 |
 | 11/11 | **Alarme de especulação** em dois níveis: forte (acima do P90) e fraco (real 2 ou mais níveis acima do previsto) | D16 |
 | 11/11 | **Cluster do concelho como atributo do ID3**; o NB2 corre antes do NB1 | D17 |
+| 11/11 | **Dataset final** `data/processed/dataset_final.csv` (46 450 apartamentos × 19 colunas), gerado por `src/preparar_dataset.py`; metadados em [`dataset_final.md`](dataset_final.md) | D08, D18, D19, D20 |
 
 **Código feito até agora:** só o bloco A1 (entropia). O resto foram decisões, confirmadas com contas sobre os dados reais.
 
@@ -61,21 +62,21 @@ Ponto de situação a **11/11/2026**. Este é o ficheiro de entrada: diz o que j
 
 | # | Decisão | Proposta | Quem |
 |---|---|---|---|
-| **D08** | Nulos do `ConstructionYear` (14,6%; o nulo tinha 71,8% caros **com o alvo antigo**: recalcular com o alvo da D13) | Categoria «Desconhecido» (FAI33 p.14). Os dados e as opções estão em `decisoes.md` | **Gilberto + Rúbem** |
+| ~~D08~~ ✔ decidida a 11/11 (categoria «Desconhecido») | Nulos do `ConstructionYear`: no dataset final são 13,3%, com 4% baratos e 21% muito caros, por isso o nulo fica como categoria | Categoria «Desconhecido» (FAI33 p.14). Os dados e as opções estão em `decisoes.md` | **Gilberto + Rúbem** |
 | Q10 | Divisão das tarefas: quem fica com o NB1 (árvore) e quem fica com o NB2 (K-Means) (R9) | NB1: ______ · NB2: ______ | Gilberto + Rúbem |
 
 ### 2.2 Para decidir quando lá chegarmos
 
 | # | Decisão | Proposta | Bloco |
 |---|---|---|---|
-| Q17 | Erros e outliers (`NumberOfBathrooms` com o máximo de 3 020; áreas extremas; picos nos anos 1937 e 1951) | Ver os dados no bloco P4 | P4 |
+| Q17 | Erros e outliers | ✔ Em grande parte fechada pela D20 (preço, área, casas de banho, certificado). **Em aberto:** os picos do `ConstructionYear` em 1951 (713 anúncios, contra 505 em 1950) e 1937 (281), que podem ser um valor por omissão do portal `[VERIFICAR]` | P4 |
 | Q18 | Discretização dos contínuos para o ID3: largura igual ou frequência igual, e quantos intervalos | Frequência igual (quantis), com o nº de intervalos como parâmetro (FAI33 p.18-19) | P5 |
 | Q15 | Tamanho da amostra para a árvore em Python puro | Testar a velocidade com uma amostra estratificada e decidir com base nisso | P6 |
 | Q12 | Classes desequilibradas (com a D15 ficam 25/25/25/15/10) | Seguir FAI33 p.27-30: 30% à parte para a validação final e treino equilibrado por subamostragem; F1 por classe (FAI34 p.12) | P6 |
 | Q3 | Afinação dos hiperparâmetros | Ciclo explícito sobre os valores candidatos + 10-fold CV estratificada (FAI33 p.34) | A9 |
 | Q13 | Só a árvore, ou a árvore e um 2.º algoritmo? (guia R14 vs O2) | **Confirmar com o docente** | A9 |
 | Q14 | Atributos do NB2 (a unidade já está decidida: concelho, D14) | Indicadores PORDATA da D12 + medianas dos anúncios por concelho | K1 |
-| Q19 | A D06 (excluir distritos com menos de 100 anúncios) ainda faz falta? Existia por causa da mediana por distrito (D05), que a D13 substituiu | Rever: o alvo da D13 usa o valor do concelho com a NUTS III como substituto | P2 |
+| Q19 | A D06 ainda faz falta? | ✔ Não: fechada pela D20, as ilhas entram com a NUTS III | P2 |
 | Q20 | Features do contexto em valor absoluto ou em rácio face ao distrito? | Ver na EDA (NB0) qual separa melhor o alvo da D13 | P4 |
 | Q5 | Escolha de k no K-Means | Cotovelo sobre o SSE (FAI32 p.27) | K4 |
 | Q6 | Normalizar antes do K-Means | Sim (FAI32 p.26). Primeiro tratar os outliers, que senão comprimem a escala | K2 |
