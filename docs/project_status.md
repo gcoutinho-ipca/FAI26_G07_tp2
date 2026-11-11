@@ -1,8 +1,8 @@
 # Status do Projeto - FAI, G07 (Projeto 02)
 
-**Data de última atualização:** 05 de Novembro de 2026
-Estado: preparação dos dados do NB1 em curso (passos 1 a 5 decididos; D08 pendente). O ponto de situação e o plano por blocos estão em [`pendentes.md`](pendentes.md).
-**Dataset Utilizado:** `data/archive/portugal_listinigs.csv`
+**Data de última atualização:** 11 de Novembro de 2026
+Estado: preparação dos dados do NB1 em curso. A 11/11 o alvo mudou (D13) e entrou o PORDATA como segunda fonte (D12); os passos 2 e 3 abaixo estão a ser revistos. O ponto de situação e o plano por blocos estão em [`pendentes.md`](pendentes.md).
+**Datasets utilizados:** `data/archive/portugal_listinigs.csv` (anúncios) e `data/pordata/` (indicadores do INE por concelho, extraídos a 04-11-2026; D12)
 
 ## 1. Objetivo do Projeto
 Implementação manual (sem uso de `scikit-learn`) de algoritmos de **Aprendizagem Supervisionada (Árvore de Decisão/ID3)** e **Não Supervisionada (K-Means)**, seguindo o ciclo de vida **CRISP-DM**. O projeto foca na compreensão profunda dos algoritmos e no rigor no tratamento de dados.
@@ -66,7 +66,7 @@ Em ambos: parâmetros no topo e tabela de experiências (O3).
 | 0 | Dataset original `portugal_listinigs.csv` | 190 867 | n.a. |
 | 1 | Ficam só `Type` = Apartment ou House, com `Price` preenchido | 122 271 | D04 |
 | 2 | Saem os distritos com menos de 100 anúncios (`MIN_ANUNCIOS_DISTRITO = 100`); são 9 distritos | 122 097 | D06 |
-| 3 | Alvo `caro` = 1 se `Price` > mediana do distrito, senão 0 (os 665 anúncios com o preço igual à mediana ficam 0). Resultado: 50,4% barato / 49,6% caro. Depois disto, `Price` sai dos atributos | 122 097 | D03, D05 |
+| 3 | ⚠️ **Substituído pela D13:** caro = €/m² (`LivingArea`) acima de 1,447 (Apartment) ou 1,236 (House) vezes a avaliação bancária do concelho e do tipo; 50/50 em cada tipo. Texto antigo: alvo `caro` = 1 se `Price` > mediana do distrito, senão 0 (os 665 anúncios com o preço igual à mediana ficam 0). Resultado: 50,4% barato / 49,6% caro. Depois disto, `Price` sai dos atributos | 122 097 | D03, D05 |
 | 4 | Ficam só os **8 atributos** escolhidos e o alvo: `Type`, `TotalArea`, `LivingArea`, `NumberOfBathrooms`, `Parking`, `ConstructionYear`, `EnergyCertificate`, `Elevator` | 122 097 | D07 |
 | 5 | Saem as linhas com nulo em `NumberOfBathrooms` ou em `Elevator` | 121 679 | D09 |
 | ⏳ | **`ConstructionYear` (14,6% de nulos): para decidir com o Rúbem.** O nulo tem 71,8% caros, por isso não é aleatório. As opções e os dados estão na D08 | | D08 |
@@ -74,7 +74,7 @@ Em ambos: parâmetros no topo e tabela de experiências (O3).
 
 **Porque é que estes 8 e não outros (resumo da D07):** todos têm 15% de nulos ou menos e mostram relação com o alvo. As colunas com mais de 50% de nulos, as que têm centenas ou milhares de valores (`City`, `Town`), as redundantes e o próprio `Price` ficaram de fora. A lista completa dos excluídos, com o motivo de cada um, está na D07 de [`decisoes.md`](decisoes.md).
 
-**Nota:** como o limiar é a mediana do próprio distrito, o alvo fica ~50/50 dentro de cada distrito. Por isso o `District`, sozinho, quase não prevê o alvo.
+**Nota (válida só para a D05, já substituída):** como o limiar é a mediana do próprio distrito, o alvo fica ~50/50 dentro de cada distrito. Por isso o `District`, sozinho, quase não prevê o alvo.
 
 ---
 

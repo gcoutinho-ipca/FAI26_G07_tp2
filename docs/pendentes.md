@@ -1,6 +1,6 @@
 # Pendentes do Projeto 02 (FAI, G07)
 
-Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que já está feito, o que falta decidir e o que falta fazer, em blocos pequenos.
+Ponto de situação a **11/11/2026**. Este é o ficheiro de entrada: diz o que já está feito, o que falta decidir e o que falta fazer, em blocos pequenos.
 
 ## Como ler a documentação
 
@@ -44,6 +44,9 @@ Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que j
 | 05/11 | Criado o `notebooks/NB1_arvore_decisao.ipynb`, onde o código do algoritmo é escrito diretamente | D10 |
 | 05/11 | **Bloco A1 (entropia)** feito e validado no «Restaurant» (6/6 testes OK) | NB1, secção 4.2 |
 | 05/11 | A EDA completa fica num notebook próprio (NB0) e o NB1 fica só com um resumo | D11 |
+| 11/11 | **PORDATA como segunda fonte**, juntado pelo concelho (`City`, 99,96% das linhas): avaliação bancária, poder de compra, alojamentos por km², indivíduos por alojamento | D12 |
+| 11/11 | **Novo alvo do ID3:** €/m² (`LivingArea`) face à avaliação bancária do concelho e do tipo, com limiar por tipo (1,447 / 1,236); substitui a D03 e a D05 | D13 |
+| 11/11 | **K-Means por concelho** (cerca de 300 linhas) | D14 |
 
 **Código feito até agora:** só o bloco A1 (entropia). O resto foram decisões, confirmadas com contas sobre os dados reais.
 
@@ -55,7 +58,7 @@ Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que j
 
 | # | Decisão | Proposta | Quem |
 |---|---|---|---|
-| **D08** | Nulos do `ConstructionYear` (14,6%; o nulo tem 71,8% caros) | Categoria «Desconhecido» (FAI33 p.14). Os dados e as opções estão em `decisoes.md` | **Gilberto + Rúbem** |
+| **D08** | Nulos do `ConstructionYear` (14,6%; o nulo tinha 71,8% caros **com o alvo antigo**: recalcular com o alvo da D13) | Categoria «Desconhecido» (FAI33 p.14). Os dados e as opções estão em `decisoes.md` | **Gilberto + Rúbem** |
 | Q10 | Divisão das tarefas: quem fica com o NB1 (árvore) e quem fica com o NB2 (K-Means) (R9) | NB1: ______ · NB2: ______ | Gilberto + Rúbem |
 
 ### 2.2 Para decidir quando lá chegarmos
@@ -68,7 +71,9 @@ Ponto de situação a **05/11/2026**. Este é o ficheiro de entrada: diz o que j
 | Q12 | Classes desequilibradas | Provavelmente desnecessário, porque o alvo está 49,6/50,4. Fica só a separação dos 30% para o teste final (FAI33 p.28) | P6 |
 | Q3 | Afinação dos hiperparâmetros | Ciclo explícito sobre os valores candidatos + 10-fold CV estratificada (FAI33 p.34) | A9 |
 | Q13 | Só a árvore, ou a árvore e um 2.º algoritmo? (guia R14 vs O2) | **Confirmar com o docente** | A9 |
-| Q14 | O NB2 usa o mesmo dataset? Com que atributos? | Por decidir no bloco K1 | K1 |
+| Q14 | Atributos do NB2 (a unidade já está decidida: concelho, D14) | Indicadores PORDATA da D12 + medianas dos anúncios por concelho | K1 |
+| Q19 | A D06 (excluir distritos com menos de 100 anúncios) ainda faz falta? Existia por causa da mediana por distrito (D05), que a D13 substituiu | Rever: o alvo da D13 usa o valor do concelho com a NUTS III como substituto | P2 |
+| Q20 | Features do contexto em valor absoluto ou em rácio face ao distrito? | Ver na EDA (NB0) qual separa melhor o alvo da D13 | P4 |
 | Q5 | Escolha de k no K-Means | Cotovelo sobre o SSE (FAI32 p.27) | K4 |
 | Q6 | Normalizar antes do K-Means | Sim (FAI32 p.26). Primeiro tratar os outliers, que senão comprimem a escala | K2 |
 | Q11 | Versões das bibliotecas | Fixar as do `.venv` num `requirements.txt` | N1 |
