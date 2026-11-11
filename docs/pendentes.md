@@ -47,6 +47,9 @@ Ponto de situação a **11/11/2026**. Este é o ficheiro de entrada: diz o que j
 | 11/11 | **PORDATA como segunda fonte**, juntado pelo concelho (`City`, 99,96% das linhas): avaliação bancária, poder de compra, alojamentos por km², indivíduos por alojamento | D12 |
 | 11/11 | **Novo alvo do ID3:** €/m² (`LivingArea`) face à avaliação bancária do concelho e do tipo, com limiar por tipo (1,447 / 1,236); substitui a D03 e a D05 | D13 |
 | 11/11 | **K-Means por concelho** (cerca de 300 linhas) | D14 |
+| 11/11 | **Alvo em 5 classes** (barato, médio, médio-alto, caro, muito caro; 25/25/25/15/10, percentis por tipo) | D15 |
+| 11/11 | **Alarme de especulação** em dois níveis: forte (acima do P90) e fraco (real 2 ou mais níveis acima do previsto) | D16 |
+| 11/11 | **Cluster do concelho como atributo do ID3**; o NB2 corre antes do NB1 | D17 |
 
 **Código feito até agora:** só o bloco A1 (entropia). O resto foram decisões, confirmadas com contas sobre os dados reais.
 
@@ -68,7 +71,7 @@ Ponto de situação a **11/11/2026**. Este é o ficheiro de entrada: diz o que j
 | Q17 | Erros e outliers (`NumberOfBathrooms` com o máximo de 3 020; áreas extremas; picos nos anos 1937 e 1951) | Ver os dados no bloco P4 | P4 |
 | Q18 | Discretização dos contínuos para o ID3: largura igual ou frequência igual, e quantos intervalos | Frequência igual (quantis), com o nº de intervalos como parâmetro (FAI33 p.18-19) | P5 |
 | Q15 | Tamanho da amostra para a árvore em Python puro | Testar a velocidade com uma amostra estratificada e decidir com base nisso | P6 |
-| Q12 | Classes desequilibradas | Provavelmente desnecessário, porque o alvo está 49,6/50,4. Fica só a separação dos 30% para o teste final (FAI33 p.28) | P6 |
+| Q12 | Classes desequilibradas (com a D15 ficam 25/25/25/15/10) | Seguir FAI33 p.27-30: 30% à parte para a validação final e treino equilibrado por subamostragem; F1 por classe (FAI34 p.12) | P6 |
 | Q3 | Afinação dos hiperparâmetros | Ciclo explícito sobre os valores candidatos + 10-fold CV estratificada (FAI33 p.34) | A9 |
 | Q13 | Só a árvore, ou a árvore e um 2.º algoritmo? (guia R14 vs O2) | **Confirmar com o docente** | A9 |
 | Q14 | Atributos do NB2 (a unidade já está decidida: concelho, D14) | Indicadores PORDATA da D12 + medianas dos anúncios por concelho | K1 |

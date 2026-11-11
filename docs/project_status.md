@@ -66,7 +66,7 @@ Em ambos: parâmetros no topo e tabela de experiências (O3).
 | 0 | Dataset original `portugal_listinigs.csv` | 190 867 | n.a. |
 | 1 | Ficam só `Type` = Apartment ou House, com `Price` preenchido | 122 271 | D04 |
 | 2 | Saem os distritos com menos de 100 anúncios (`MIN_ANUNCIOS_DISTRITO = 100`); são 9 distritos | 122 097 | D06 |
-| 3 | ⚠️ **Substituído pela D13:** caro = €/m² (`LivingArea`) acima de 1,447 (Apartment) ou 1,236 (House) vezes a avaliação bancária do concelho e do tipo; 50/50 em cada tipo. Texto antigo: alvo `caro` = 1 se `Price` > mediana do distrito, senão 0 (os 665 anúncios com o preço igual à mediana ficam 0). Resultado: 50,4% barato / 49,6% caro. Depois disto, `Price` sai dos atributos | 122 097 | D03, D05 |
+| 3 | ⚠️ **Substituído pela D13 e depois pela D15** (5 classes por percentis do rácio, ver `decisoes.md`). Versão binária da D13: caro = €/m² (`LivingArea`) acima de 1,447 (Apartment) ou 1,236 (House) vezes a avaliação bancária do concelho e do tipo; 50/50 em cada tipo. Texto antigo: alvo `caro` = 1 se `Price` > mediana do distrito, senão 0 (os 665 anúncios com o preço igual à mediana ficam 0). Resultado: 50,4% barato / 49,6% caro. Depois disto, `Price` sai dos atributos | 122 097 | D03, D05 |
 | 4 | Ficam só os **8 atributos** escolhidos e o alvo: `Type`, `TotalArea`, `LivingArea`, `NumberOfBathrooms`, `Parking`, `ConstructionYear`, `EnergyCertificate`, `Elevator` | 122 097 | D07 |
 | 5 | Saem as linhas com nulo em `NumberOfBathrooms` ou em `Elevator` | 121 679 | D09 |
 | ⏳ | **`ConstructionYear` (14,6% de nulos): para decidir com o Rúbem.** O nulo tem 71,8% caros, por isso não é aleatório. As opções e os dados estão na D08 | | D08 |
